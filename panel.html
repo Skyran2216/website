@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sky Cat Network</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 40px 0 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            font-size: 50px;
+            color: #ff335c;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        p {
+            margin-bottom: 10px;
+            color: #a1a1a1;
+            font-weight: bold;
+            text-align: center;
+        }
+        .container, .running-attacks {
+            width: 90%;
+            max-width: 280px;
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            margin-top: 20px;
+        }
+        label {
+            display: block;
+            margin: 5px 0;
+            text-align: left;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 10px;
+            font-size: 13px;
+        }
+        input, select {
+            background-color: #2c2c2c;
+            color: #fff;
+        }
+        button {
+            background-color: #ff335c;
+            color: #fff;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #e62b51;
+        }
+        h2 {
+            font-size: 16px;
+            color: #ff335c;
+            margin-bottom: 10px;
+        }
+
+        /* Running Attacks Section */
+        .running-attacks {
+            width: 90%;
+            max-width: 280px;
+            background-color: rgba(30, 30, 30, 0.8); /* Transparan */
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.6); /* Bayangan lebih halus */
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            border-spacing: 0; /* Menghapus celah antar sel */
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: center;
+            font-size: 12px;
+            border: none; /* Hapus garis batas sel */
+        }
+
+        th {
+            background-color: #ff335c;
+            color: #fff;
+            border-radius: 10px; /* Melengkungkan bagian header */
+        }
+
+        td {
+            color: #a1a1a1;
+            background-color: rgba(255, 255, 255, 0.05); /* Warna transparan */
+            margin: 4px;
+            border-radius: 10px; /* Sudut melengkung */
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        tr:not(:first-child) {
+            margin-bottom: 10px;
+        }
+
+        .no-attack td {
+            background-color: rgba(255, 51, 92, 0.2); /* Transparansi untuk pesan "No attacks running" */
+            color: #ff335c;
+            font-weight: bold;
+        }
+
+        .logout-button {
+            background-color: #ff335c;
+            color: #fff;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 12px;
+            margin-top: 20px;
+            width: auto;
+            border-radius: 10px;
+        }
+        .logout-button:hover {
+            background-color: #e62b51;
+        }
+    </style>
+</head>
+<body>
+    <h1>Sky Cat Stresser</h1>
+    <p>Welcome to Sky Cat Stresser and Enjoy Using Web Stresser</p>
+
+    <!-- Attack Form -->
+    <div class="container">
+        <form id="attackForm">
+            <label for="host">URL</label>
+            <input type="text" id="host" placeholder="Enter your target URL" required>
+            <input type="hidden" id="port" value="443"> <!-- Default port 443 -->
+            <label for="time">Time (seconds)</label>
+            <input type="number" id="time" placeholder="120" required>
+            <label for="method">Method</label>
+            <select id="method">
+                <option value="XYZ">XYZ</option>
+                <option value="FLOOD">FLOOD</option>
+                <option value="TLS">TLS</option>
+                <option value="VZY">VZY</option>
+                <option value="CIKO">CIKO</option>
+                <option value="CIBI">CIBI</option>
+            </select>
+            <button type="button" id="attackButton" onclick="startAttack()">Start →</button>
+        </form>
+    </div>
+
+    <!-- Running Attacks Section -->
+    <div class="running-attacks">
+        <h2>Running Attacks</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Host</th>
+                    <th>Port</th>
+                    <th>Method</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody id="attackLog">
+                <tr class="no-attack"><td colspan="4">No attacks running</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Logout Button -->
+    <button class="logout-button" onclick="confirmLogout()">Logout</button>
+
+    <script>
+        if (!localStorage.getItem('loggedIn')) {
+            window.location.href = 'index.html';
+        }
+
+        let isAttackRunning = false;
+
+        function startAttack() {
+            if (isAttackRunning) {
+                alert('An attack is already running. Please wait until it finishes.');
+                return;
+            }
+
+            const host = document.getElementById('host').value;
+            const port = document.getElementById('port').value;
+            const time = parseInt(document.getElementById('time').value);
+            const method = document.getElementById('method').value;
+
+            if (!host || time <= 0 || time > 120 || !method) {
+                alert('Please enter valid attack details.');
+                return;
+            }
+
+            isAttackRunning = true;
+            document.getElementById('attackButton').disabled = true;
+
+            logAttack(host, port, method, time);
+
+            const apiUrl = `http://ip:port/api?key=skycat&host=${host}&port=${port}&time=${time}&method=${method}`;
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => console.log('Attack Response:', data))
+                .catch(error => console.log('Error:', error));
+        }
+
+        function logAttack(host, port, method, time) {
+            const table = document.getElementById('attackLog');
+            const noAttackRow = table.querySelector('.no-attack');
+            if (noAttackRow) noAttackRow.remove();
+
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${host.length > 30 ? host.substring(0, 30) + '...' : host}</td>
+                <td>${port}</td>
+                <td>${method}</td>
+                <td id="time-${host}">${time}s</td>
+            `;
+            table.appendChild(row);
+
+            const countdown = setInterval(() => {
+                const timeCell = document.getElementById(`time-${host}`);
+                let currentTime = parseInt(timeCell.textContent.replace('s', ''));
+                if (currentTime <= 1) {
+                    clearInterval(countdown);
+                    row.remove();
+                    isAttackRunning = false;
+                    document.getElementById('attackButton').disabled = false;
+                    if (table.rows.length === 0) {
+                        table.innerHTML = '<tr class="no-attack"><td colspan="4">No attacks running</td></tr>';
+                    }
+                } else {
+                    timeCell.textContent = `${currentTime - 1}s`;
+                }
+            }, 1000);
+        }
+
+        function confirmLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('loggedIn');
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+</body>
+</html>

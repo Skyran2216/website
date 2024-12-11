@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #121212;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .menu-icon {
+            font-size: 30px;
+            cursor: pointer;
+            color: #fff;
+            padding: 20px;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: auto;
+            background-color: #1e1e1e;
+            border-radius: 20px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            display: none;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            font-size: 18px;
+            color: #fff;
+            padding: 10px 15px;
+            display: inline-block;
+            margin: 10px 0;
+            border-radius: 10px;
+            background-color: #ff335c;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: #e62b51;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            cursor: pointer;
+            color: #fff;
+        }
+
+        .content {
+            padding: 20px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            color: #ff335c;
+        }
+
+        .profile-card {
+            background-color: #1e1e1e;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            width: 300px;
+            margin-bottom: 30px;
+        }
+
+        .profile-card img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid #ff335c;
+            margin-bottom: 15px;
+        }
+
+        .profile-card h2 {
+            font-size: 22px;
+            margin-bottom: 10px;
+            color: #ff335c;
+        }
+
+        .profile-card p {
+            font-size: 14px;
+            color: #ccc;
+        }
+
+        .description {
+            background-color: #2c2c2c;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+            width: 80%;
+        }
+
+        .description h3 {
+            color: #ff335c;
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+
+        .description p {
+            color: #fff;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .feature-card {
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 15px;
+            width: 200px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: scale(1.05);
+            background-color: #ff335c;
+        }
+
+        .feature-card h4 {
+            font-size: 18px;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            font-size: 14px;
+            color: #ccc;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: auto;
+            color: #bbb;
+        }
+
+        .logout-button {
+            background-color: #ff335c;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .logout-button:hover {
+            background-color: #e62b51;
+        }
+    </style>
+</head>
+<body>
+    <!-- Menu Icon -->
+    <div class="menu-icon" onclick="toggleMenu()">&#9776;</div>
+
+    <!-- Sidebar -->
+    <div id="mySidebar" class="sidebar">
+        <span class="close-btn" onclick="toggleMenu()">&times;</span>
+        <a href="panel.html">Go to Panel</a>
+        <a href="#">Settings</a>
+        <a href="#">Help</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <!-- Title -->
+        <h1 class="title">Skycat Dashboard</h1>
+
+        <!-- Profile Card -->
+        <div class="profile-card">
+            <img src="https://via.placeholder.com/100" alt="Profile Picture">
+            <h2 id="username">Guest</h2>
+            <p>Creative Developer specializing in building powerful stress-testing platforms and advanced tools.</p>
+        </div>
+
+        <!-- Description Section -->
+        <div class="description">
+            <h3>About the System</h3>
+            <p>
+                This dashboard is designed to give you control and insights into your system.  
+                Harness the power of advanced technology with tools that ensure maximum efficiency and reliability.  
+                Explore stress-testing capabilities, system management, and real-time monitoring, all from a single platform.
+            </p>
+        </div>
+
+        <!-- Features Section -->
+        <div class="features">
+            <div class="feature-card">
+                <h4>Feature 1</h4>
+                <p>Advanced stress-testing capabilities for optimized performance.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Feature 2</h4>
+                <p>Real-time monitoring and reporting for better decision-making.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Feature 3</h4>
+                <p>Seamless integration with your system for enhanced control.</p>
+            </div>
+        </div>
+
+        <!-- Logout Button -->
+        <button class="logout-button" onclick="logout()">Logout</button>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Skycat Dashboard. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        // jgn di ubah jir
+        if (localStorage.getItem("loggedIn") !== "true") {
+            window.location.href = "index.html";
+        } else {
+            // Tampilkan username dari localStorage (opsional)
+            const username = localStorage.getItem("username");
+            if (username) {
+                document.getElementById("username").textContent = username;
+            }
+        }
+
+        // Fungsi toggle sidebar
+        function toggleMenu() {
+            const sidebar = document.getElementById("mySidebar");
+            sidebar.style.display = sidebar.style.display === "block" ? "none" : "block";
+        }
+
+        // ini buat log out jgn di ubah 
+        function logout() {
+            localStorage.removeItem("loggedIn");
+            localStorage.removeItem("username");
+            window.location.href = "index.html";
+        }
+    </script>
+</body>
+</html>
